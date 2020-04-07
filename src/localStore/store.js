@@ -1,7 +1,7 @@
 import Vue from "vue";
 import Vuex from "vuex";
 
-import persone from "../moduleUserPanel/store/index.js";
+/* import persone from "../moduleUserPanel/store/index.js"; */
 import alert from "./modules/alert";
 import auth from "./modules/auth/index";
 
@@ -22,7 +22,6 @@ const store = new Vuex.Store({
     },
   },
   modules: {
-    persone,
     alert,
     auth,
   },

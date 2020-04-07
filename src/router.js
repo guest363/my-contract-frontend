@@ -14,11 +14,6 @@ const router = new Router({
       component: () => import("./main-page.vue"),
     },
     {
-      path: "/userPanel",
-      name: "Панель пользователя",
-      component: () => import("./moduleUserPanel/views/index.vue"),
-    },
-    {
       path: "/login",
       name: "Аутентификация",
       component: () => import("./moduleLogin/views/login.vue"),
