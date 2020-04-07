@@ -1,15 +1,26 @@
-<template >
+<template>
   <nav class="nav">
     <router-link to="/">
       <div class="nav--logo">
-        <img class="nav--logo--img" src="../../assets/img/logo.png" alt="" srcset="">
-        <h5 class="nav--logo--text">{{portalName}}
-        </h5>
+        <img
+          class="nav--logo--img"
+          src="../../assets/img/logo.svg"
+          alt=""
+          srcset=""
+        />
+        <h5 class="nav--logo--text">{{ portalName }}</h5>
       </div>
     </router-link>
     <ul class="nav--list">
-      <li v-for="item in menuElements" :key="item.text" @click="setNewRoute(item)">
-        <menu-list-item :param="item" :currentRoute="currentRoute"></menu-list-item>
+      <li
+        v-for="item in menuElements"
+        :key="item.text"
+        @click="setNewRoute(item)"
+      >
+        <menu-list-item
+          :param="item"
+          :currentRoute="currentRoute"
+        ></menu-list-item>
       </li>
     </ul>
   </nav>
@@ -22,7 +33,7 @@ export default {
   data() {
     return {
       menuElements: "",
-      currentRoute: ""
+      currentRoute: "",
     };
   },
   components: { menuListItem },
@@ -33,18 +44,18 @@ export default {
     auth() {
       return this.$store.getters.getAuth;
     },
-     portalName() {
+    portalName() {
       return this.$store.getters.getPortalName;
-    }
+    },
   },
   methods: {
     setNewRoute(route) {
       this.$router.push({ path: `/${route.link}` });
-    }
+    },
   },
   created() {
     this.menuElements = menuElements;
     this.currentRoute = this.$router.currentRoute.path;
-  }
+  },
 };
 </script>

@@ -6,7 +6,7 @@ const mutations = {
     async CREATE_USER(state, msg) {
         state.userToCreate = msg;
         const result = await backend.createUser(msg);
-        state.authActionResult = result.data;
+        state.isAuthenticated = result.data;
     },
     SET_TOKEN(state, token) {
         state.token = token;
@@ -15,7 +15,7 @@ const mutations = {
         state.displayName = name;
     },
     SET_AUTH_RESULT(state, result) {
-        state.authActionResult = result;
+        state.isAuthenticated = result;
     },
 };
 export default mutations;

@@ -23,9 +23,11 @@ Vue.use(backend); */
 /* Свои компоненты с глобальной регистрацией */
 import customAlert from "./components/modals/custom-alert.vue";
 import modal from "./components/modals/common-modal.vue";
+import customInput from "./components/custom-html/custom-input.vue";
 
 Vue.component("custom-alert", customAlert);
 Vue.component("modal", modal);
+Vue.component("custom-input", customInput);
 
 Vue.config.productionTip = false;
 /* eslint-disable no-new */

@@ -15,10 +15,6 @@ const store = new Vuex.Store({
     add(state, data) {
       state.message.push(data);
     },
-
-    addWikiTag(state, data) {
-      state.wikiTag.push(data);
-    },
   },
   getters: {
     getPortalName(state) {

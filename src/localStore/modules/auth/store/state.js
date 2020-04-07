@@ -3,6 +3,6 @@ const state = {
     userToCreate: false,
     token: '',
     displayName: '',
-    authActionResult: ''
+    isAuthenticated: ''
 };
 export default state;
