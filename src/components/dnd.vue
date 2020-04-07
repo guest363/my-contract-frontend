@@ -7,12 +7,9 @@
     v-on:drop="drop($event)"
   >
     <form class="flex-center dropZone--form">
-      <p class="dropZone--form--text">{{ data.text.main }}</p>
-      <label
-        v-show="data.show.button"
-        class="common--button dropZone--form--button flex-center"
-      >
-        {{ data.text.button }}
+      <p class="dropZone--form--text">{{data.text.main.default}}</p>
+      <label v-show="data.show.button" class="common--button dropZone--form--button flex-center">
+        {{data.text.button.default}}
         <input
           v-on:change="selectInput($event)"
           type="file"
@@ -20,30 +17,40 @@
           title="Загрузите одну или несколько фотографий"
           required
           multiple
-          accept="rtf"
-        />
+          accept="image/*"
+        >
       </label>
-      <p v-show="data.show.limits" class="dropZone--form--text--limits">
-        {{ data.text.limits }}
-      </p>
+      <p v-show="data.show.limits" class="dropZone--form--text--limits">{{data.text.limits.default}}</p>
     </form>
     <!-- Локальная загрузка довольна быстрая, полоса загрузки не требуется
     <progress id="dropZone--progress-bar" max=100 value=0></progress>-->
     <div class="dropZone--gallery">
+      <div class="dropZone--gallery--thumbnail"></div>
       <div class="dropZone--gallery--full"></div>
     </div>
-    <div id="rtfDOM"></div>
   </div>
 </template>
 
 <script>
-import { EMFJS, RTFJS, WMFJS } from "rtf.js";
+import Compressor from "compressorjs";
+
+/**
+ * Создает область для drag and drop загрузки изображения,
+ * стили встроены
+ * @emits dropImage имитит событие "dropImage" при
+ * каждом добавлении картинки, в этом событии картинка
+ * сжимается до большого размера. Пример подписи на
+ * событие у родителя
+ * v-on:dropImage="imageHendler('SHELTER', $event)"
+ * @emits dropThumbnail здесь сильно уменьшенное превью
+ * @requires Compressor для сжатия изображений
+ */
 export default {
   name: "drag-and-drop",
   data: () => {
     return {
       image: [],
-      thumbnail: [],
+      thumbnail: []
     };
   },
   /** Параметры для инициализации компонента
@@ -64,30 +71,30 @@ export default {
           show: {
             button: {
               type: Boolean,
-              default: true,
+              default: true
             },
             limits: {
               type: Boolean,
-              default: false,
-            },
+              default: false
+            }
           },
           text: {
             main: {
               type: String,
-              default: "Перетащите или выберите изображение",
+              default: "Перетащите или выберите изображение"
             },
             button: {
               type: String,
-              default: "Выбрать изображения",
+              default: "Выбрать изображения"
             },
             limits: {
               type: String,
-              default: "Файлы до 2 мегабайт",
-            },
-          },
+              default: "Файлы до 2 мегабайт"
+            }
+          }
         };
-      },
-    },
+      }
+    }
   },
   methods: {
     /**
@@ -123,95 +130,80 @@ export default {
       this.handleFiles(files);
     },
     handleFiles(files) {
-      /* const vm = this; */
-      RTFJS.loggingEnabled(false);
-      WMFJS.loggingEnabled(false);
-      EMFJS.loggingEnabled(false);
-      const rtf = document.getElementById("rtfDOM");
-      let reader = new FileReader();
-
-      [...files].forEach((element) => {
-        reader.readAsArrayBuffer(element);
-      });
-      reader.onload = function() {
-        console.log(reader.result);
-        const doc = new RTFJS.Document(reader.result);
-
-        const meta = doc.metadata();
-        doc
-          .render()
-          .then(function(htmlElements) {
-            console.log(meta);
-            console.log(htmlElements);
-            const div = document.createElement("div");
-            div.append(...htmlElements);
-            rtf.append(div);
-          })
-          .catch((error) => console.error(error));
+      const vm = this;
+      /**
+       * Шаблон для работы с библиотекой Compressor
+       * @param {File} element файл который нужно сжать
+       * @param {Object} initParam
+       * @param {Number} initParam.quality степерь сжатия изображения, поумолчанию 0.85
+       * @param {String} initParam.width ширина изображения на выходе
+       * @param {String} initParam.height высота изображения на выходе
+       * @param {String} initParam.htmlAppendElem DOM элемент к которому прикрепится изображение
+       * @param {String} initParam.htmlAppendClass класс для прикрепленного изображения
+       * @param {Array} initParam.base64Result ссылка на массив где хранятся сжатые изображения в
+       * формате base64, они в последствии эмитятся родительскому эллементу
+       * @param {String} initParam.event имя события ['dropImage', 'dropThumbnail']
+       */
+      const compessorWorker = (element, initParam) => {
+        const imageContainer = this.$el.querySelector(
+          `.${initParam.htmlAppendElem}`
+        );
+        new Compressor(element, {
+          quality: initParam.quality,
+          maxWidth: initParam.width,
+          maxHeight: initParam.height,
+          success(result) {
+            const reader = new FileReader();
+            reader.readAsDataURL(result);
+            reader.onloadend = () => {
+              const img = document.createElement("img");
+              /* reader.result это закодированное изображение  */
+              const imgBase64 = reader.result;
+              initParam.base64Result.push(imgBase64);
+              img.src = imgBase64;
+              img.className = initParam.htmlAppendClass;
+              imageContainer.appendChild(img);
+              /* Отправляем именно base64, т.е. часть с  
+              'data:image;base64,' удаляется перед отправкой */
+              vm.$emit(initParam.event, imgBase64.split(",")[1]);
+            };
+          },
+          error(error) {
+            /* TODO: можно добавить изображение с каким нибудь шаблоном 
+            для тех файлов что по какой либо причине не загрузились и 
+            выводить их в DOM. Но надо ли? */
+            console.log(error.message);
+          }
+        });
       };
-    },
-  },
+      const encodeImageFileAsURL = element => {
+        compessorWorker(element, {
+          quality: 0.85,
+          width: 1200,
+          height: 1200,
+          htmlAppendElem: `dropZone--gallery--full`,
+          htmlAppendClass: "dropZone--gallery--full--img",
+          base64Result: vm.image,
+          event: "dropImage"
+        });
+      };
+      const makeThumbnail = element => {
+        compessorWorker(element, {
+          quality: 0.85,
+          width: 400,
+          height: 400,
+          htmlAppendElem: `dropZone--gallery--thumbnail`,
+          htmlAppendClass: "dropZone--gallery--thumbnail--img",
+          base64Result: vm.thumbnail,
+          event: "dropThumbnail"
+        });
+      };
+
+      [...files].forEach(element => {
+        encodeImageFileAsURL(element);
+        makeThumbnail(element);
+      });
+    }
+  }
 };
 </script>
-
-<style lang="less">
-.dropZone {
-  border: 2px dashed var(--grey);
-  border-radius: 0px;
-  width: 100%;
-  max-width: 500px;
-  padding: 20px;
-  text-align: center;
-  overflow: hidden;
-  &.highlight {
-    border-color: var(--button--hover--bg);
-  }
-  &--hide {
-    width: 20px;
-    height: 20px;
-    opacity: 0;
-    overflow: hidden;
-    position: absolute;
-    z-index: 1;
-  }
-}
-.dropZone--form {
-  margin-bottom: 10px;
-  &--text {
-    margin-top: 0;
-    &--limits {
-      font-size: 12px;
-    }
-  }
-  &--button {
-    padding: 10px;
-    cursor: pointer;
-    margin-top: 0;
-    border: 1px solid #ccc;
-    &:hover {
-      background: var(--button--hover--bg);
-    }
-  }
-}
-.dropZone--gallery {
-  margin-top: 10px;
-  &--full {
-    display: none;
-    &--img {
-      width: 250px;
-      max-width: 100%;
-      margin-bottom: 10px;
-      margin-right: 10px;
-      vertical-align: middle;
-    }
-  }
-  &--thumbnail {
-    &--img {
-      width: 150px;
-      margin-bottom: 10px;
-      margin-right: 10px;
-      vertical-align: middle;
-    }
-  }
-}
-</style>

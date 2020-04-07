@@ -1,32 +1,42 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
+    <div class="header">
+      <router-link to="/userPanel">
+        <div class="header--user-panel">
+          <i class="header--user-panel-icon fa fa-user-circle-o" aria-hidden="true"></i>
+          <span>{{displayName}}</span>
+        </div>
+      </router-link>
     </div>
-    <router-view/>
+    <main class="main">
+      <transition name="fade--page" tag="div" mode="out-in">
+        <router-view/>
+      </transition>
+    </main>
+    <!-- Основная навигационная панель -->
+    <main-navi/>
+    <custom-alert></custom-alert>
   </div>
 </template>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
+<script>
+import mainNavi from "./components/navi/mainNavi.vue";
+const App = {
+  name: "App",
+  components: { mainNavi },
+  computed: {
+    displayName() {
+      return this.$store.getters.GET_DISPLAY_NAME;
+    }
+  },
+  beforeMount() {
+    /* Инициализация vuex нужными данными */
+    this.$store.commit("INIT_USER_FROM_LOCAL_STORAGE");
+    this.$store.dispatch("INIT_PERSON_FROM_SERVER");
+  }
+};
+export default App;
+</script>
 
-#nav {
-  padding: 30px;
-}
-
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-#nav a.router-link-exact-active {
-  color: #42b983;
-}
+<style src="./css/imports-main.less">
 </style>
