@@ -7,8 +7,12 @@ export default [
   {
     link: "archive",
     icon: "fas fa-archive",
-    text: "Архив",
-    inWork: true,
+    text: "Архив"
+  },
+  {
+    link: "check-org",
+    icon: "fas fa-user-check",
+    text: "Проверка организации",
   },
 
   /* {

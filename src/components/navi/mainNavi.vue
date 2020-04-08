@@ -4,7 +4,7 @@
       <div class="nav--logo">
         <img
           class="nav--logo--img"
-          src="../../assets/img/logo.svg"
+          src="../../assets/img/logo.png"
           alt=""
           srcset=""
         />
@@ -19,7 +19,6 @@
       >
         <menu-list-item
           :param="item"
-          :currentRoute="currentRoute"
         ></menu-list-item>
       </li>
     </ul>
@@ -33,7 +32,6 @@ export default {
   data() {
     return {
       menuElements: "",
-      currentRoute: "",
     };
   },
   components: { menuListItem },
@@ -55,7 +53,6 @@ export default {
   },
   created() {
     this.menuElements = menuElements;
-    this.currentRoute = this.$router.currentRoute.path;
   },
 };
 </script>

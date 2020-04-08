@@ -21,6 +21,11 @@ const router = new Router({
       name: "Аутентификация",
       component: () => import("./moduleAuth/views/login.vue"),
     },
+    {
+      path: "/check-org",
+      name: "Проверка организации",
+      component: () => import("./moduleCheckOrg/views/index.vue"),
+    },
   ],
 });
 

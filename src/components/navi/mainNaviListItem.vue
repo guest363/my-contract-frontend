@@ -1,8 +1,16 @@
-<template >
-  <button :class="isActiveClass">
-    <router-link :to="param.link" :class="(param.inWork) ? 'in-Work' : ''">
-      <i :class="param.icon" aria-hidden="true"></i>
-      <span>{{param.text}}</span>
+<template>
+  <button class="nav--list--button">
+    <router-link
+      :to="param.link"
+      class="nav--list--button--link"
+      :class="param.inWork ? 'in-Work' : ''"
+    >
+      <i
+        class="nav--list--button--link--icon"
+        :class="param.icon"
+        aria-hidden="true"
+      ></i>
+      <span>{{ param.text }}</span>
     </router-link>
   </button>
 </template>
@@ -15,21 +23,9 @@ export default {
       text: String,
       inWork: {
         default: false,
-        type: Boolean
-      }
+        type: Boolean,
+      },
     },
-    currentRoute: ""
-  },
-  computed: {
-    isActiveClass() {
-      console.log(this.param.link);
-      let result =
-        this.currentRoute === `/${this.param.link}`
-          ? "nav--list--button__active nav--list--button"
-          : "nav--list--button";
-      return result;
-    }
-  },
-  methods: {}
+  }
 };
 </script>
