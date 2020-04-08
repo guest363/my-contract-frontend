@@ -6,7 +6,10 @@ const getters = {
         return storage ? storage : state.token;
     },
     GET_AUTH_RESULT(state) {
-        return state.isAuthenticated;
+        return state.authResult;
     },
+    GET_IS_AUTHENTICATED(state) {
+        return state.isAuthenticated;
+    }
 };
 export default getters;

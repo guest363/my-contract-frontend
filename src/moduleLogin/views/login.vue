@@ -1,33 +1,40 @@
 <template>
-  <div class="user-panel--login__wrapper">
-    <div class="user-panel--about">
-      <h3>Аутентификация на портале <br />Мои Контракты</h3>
-    </div>
-    <div class="user-panel--login">
-      <div class="user-panel--login--input-wrap">
-        <custom-input
-          :textLabel="`Логин`"
-          :placeholder="`ivanov490`"
-          :maxlength="`30`"
-          :required="true"
-          v-model="user.login"
-          :type="`text`"
-        />
+  <div class="user-panel--login__bg">
+    <div class="user-panel--login__wrapper">
+      <div class="user-panel--about">
+        <h3>Аутентификация на портале <br />Мои Контракты</h3>
       </div>
-      <div class="user-panel--login--input-wrap">
-        <custom-input
-          :textLabel="`Пароль`"
-          :placeholder="`**********`"
-          :maxlength="`30`"
-          :required="true"
-          v-model="user.password"
-          :type="`password`"
-        />
+      <div class="user-panel--login">
+        <div class="user-panel--login--input-wrap">
+          <custom-input
+            :textLabel="`Логин`"
+            :placeholder="`ivanov490`"
+            :maxlength="`30`"
+            :required="true"
+            v-model="user.login"
+            :type="`text`"
+          />
+        </div>
+        <div class="user-panel--login--input-wrap">
+          <custom-input
+            :textLabel="`Пароль`"
+            :placeholder="`**********`"
+            :maxlength="`30`"
+            :required="true"
+            v-model="user.password"
+            :type="`password`"
+          />
+        </div>
+        <button class="user-panel--login--button" @click="logAction">
+          {{ displayName === "" ? `Войти` : `Выйти` }}
+        </button>
+        <button
+          @click="showModal"
+          class="user-panel--login--button user-panel--login--icon-button"
+        >
+          <i class="fab fa-usb"></i>
+        </button>
       </div>
-      <button @click="logAction">
-        {{ displayName === "" ? `Войти` : `Выйти` }}
-      </button>
-      <button @click="showModal">Регистрация пользователя</button>
     </div>
     <!-- ======================== Modal ================================ -->
     <modal
@@ -72,7 +79,9 @@
         />
       </div>
       <template v-slot:footer>
-        <button @click="createUser">Создать пользователя</button>
+        <button class="user-panel--login--button" @click="createUser">
+          Создать пользователя
+        </button>
       </template>
     </modal>
   </div>
@@ -102,6 +111,7 @@ export default {
     },
     makeLogin() {
       this.$store.dispatch("LOGIN", this.user);
+      this.$router.push({ path: '/' })
     },
     createUser() {
       if (this.user.login === "" || this.user.password === "")

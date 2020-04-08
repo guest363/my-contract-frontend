@@ -21,7 +21,7 @@ const router = new Router({
   ],
 });
 router.beforeEach((to, from, next) => {
-  let isAuthenticated = store.getters.GET_AUTH_RESULT;
+  let isAuthenticated = store.getters.GET_IS_AUTHENTICATED;
   console.log(isAuthenticated);
   if (to.name !== "Аутентификация" && !isAuthenticated) next({ path: "/login" });
   else next();

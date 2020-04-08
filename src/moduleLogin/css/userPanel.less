@@ -6,16 +6,15 @@
   grid-template-columns: 1fr 1fr;
   margin: 0 2em;
   &--about {
-    padding: 150px 100px;
+    padding: 130px 100px;
     background-color: var(--button-active-color);
     line-height: 2em;
-    max-height: 400px;
     box-sizing: border-box;
     h3 {
       color: var(--white);
     }
   }
-  &--login__wrapper {
+  &--login__bg {
     position: absolute;
     width: 100%;
     height: 100%;
@@ -28,22 +27,35 @@
     flex-direction: row;
     align-items: center;
   }
+  &--login__wrapper {
+   height: max-content;
+   display: flex;
+  }
   &--login {
     display: grid;
     grid-gap: 10px;
     background-color: var(--white);
     padding: 95px 100px;
-    max-height: 400px;
     box-sizing: border-box;
+    position: relative;
     &--input-wrap {
       display: flex;
       flex-direction: column;
     }
-    button {
+    &--button {
       border-top: none;
       background: var(--button-active-color);
       padding: 10px 20px;
-      
+      margin-top: 10px;
+    }
+    &--icon-button {
+      width: min-content;
+      position: absolute;
+      right: 0;
+      bottom: 0;
+      background: none;
+      color: var(--button-active-color);
+      font-size: 1.2em;
     }
   }
   &--persons {
@@ -89,4 +101,3 @@
     }
   }
 }
-
