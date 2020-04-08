@@ -12,18 +12,27 @@ const router = new Router({
       path: "/",
       name: "Главная страница портала",
       component: () => import("./main-page.vue"),
+      meta: {
+        requiresAuth: true,
+      },
     },
     {
       path: "/login",
       name: "Аутентификация",
-      component: () => import("./moduleLogin/views/login.vue"),
+      component: () => import("./moduleAuth/views/login.vue"),
     },
   ],
 });
+
 router.beforeEach((to, from, next) => {
-  let isAuthenticated = store.getters.GET_IS_AUTHENTICATED;
-  console.log(isAuthenticated);
-  if (to.name !== "Аутентификация" && !isAuthenticated) next({ path: "/login" });
-  else next();
+  if (to.matched.some((record) => record.meta.requiresAuth)) {
+    if (store.getters.GET_IS_AUTHENTICATED) {
+      next();
+      return;
+    }
+    next("/login");
+  } else {
+    next();
+  }
 });
 export default router;

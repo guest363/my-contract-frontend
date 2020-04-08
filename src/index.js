@@ -17,8 +17,14 @@ Vue.use(
 );
 
 /* api для взаиможействия с backend rest */
-/* import backend from './backend/context.js';
+/* 
+import backend from './backend/context.js';
 Vue.use(backend); */
+
+/* Для отображения tooltip, при этом 
+внутри может быть и другой компонент */
+import VTooltip from "v-tooltip";
+Vue.use(VTooltip);
 
 /* Свои компоненты с глобальной регистрацией */
 import customAlert from "./components/modals/custom-alert.vue";

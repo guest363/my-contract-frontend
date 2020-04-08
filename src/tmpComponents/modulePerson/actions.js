@@ -1,4 +1,4 @@
-import backend from '../backend/index';
+import backend from '../../tmpComponents/modulePerson/backend/index';
 
 const actions = {
     async INIT_PERSON_FROM_SERVER(context) {

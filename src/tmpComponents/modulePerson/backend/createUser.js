@@ -1,4 +1,4 @@
-import context from '../../../../backendContext';
+import context from '../../../backendContext';
 const url = `${context.url}/api/auth`;
 /**
        * @description Получить статус всех хостов

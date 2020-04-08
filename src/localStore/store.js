@@ -3,7 +3,7 @@ import Vuex from "vuex";
 
 /* import persone from "../moduleUserPanel/store/index.js"; */
 import alert from "./modules/alert";
-import auth from "./modules/auth/index";
+import auth from "../moduleAuth/store/index.js";
 
 Vue.use(Vuex);
 

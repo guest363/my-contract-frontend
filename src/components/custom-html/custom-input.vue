@@ -191,6 +191,4 @@ const input = {
 export default input;
 </script>
 
-<style lang="less">
-
-</style>
+<style lang="less"></style>
